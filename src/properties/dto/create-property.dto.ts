@@ -1,4 +1,4 @@
-import { IsInt, IsNumber, IsPositive, IsString, IsIn, MinLength } from 'class-validator';
+import { IsNumber, IsPositive, IsString, IsIn, MinLength } from 'class-validator';
 
 export class CreatePropertyDto {
     @IsString()
@@ -31,8 +31,4 @@ export class CreatePropertyDto {
     @IsNumber()
     @IsPositive()
     price: number;
-
-    @IsInt()
-    @IsPositive()
-    created_by: number;
 }
