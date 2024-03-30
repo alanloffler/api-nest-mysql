@@ -2,34 +2,65 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PropertiesService } from './properties.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
+import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { ActiveUser } from '../common/decorators/active-user.decorator';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { Role } from '../common/enums/role.enum';
+import { ActivePropertyDto } from './dto/active-property.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
+@Auth(Role.USER)
 @Controller('properties')
 export class PropertiesController {
-  constructor(private readonly propertiesService: PropertiesService) {}
+    constructor(private readonly propertiesService: PropertiesService) {}
 
-  @Post()
-  create(@Body() createPropertyDto: CreatePropertyDto) {
-    return this.propertiesService.create(createPropertyDto);
-  }
+    @Post()
+    create(@Body() createPropertyDto: CreatePropertyDto, @ActiveUser() activeUser: IActiveUser) {
+        return this.propertiesService.create(createPropertyDto, activeUser);
+    }
 
-  @Get()
-  findAll() {
-    return this.propertiesService.findAll();
-  }
+    @Get()
+    findAll(@ActiveUser() activeUser: IActiveUser) {
+        return this.propertiesService.findAll(activeUser);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.propertiesService.findOne(id);
-  }
+    @Get(':id')
+    findOne(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.propertiesService.findOne(id, activeUser);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updatePropertyDto: UpdatePropertyDto) {
-    return this.propertiesService.update(id, updatePropertyDto);
-  }
+    @Patch(':id')
+    update(
+        @Param('id') id: number,
+        @Body() updatePropertyDto: UpdatePropertyDto,
+        @ActiveUser() activeUser: IActiveUser,
+    ) {
+        return this.propertiesService.update(id, updatePropertyDto, activeUser);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.propertiesService.remove(id);
-  }
-  
+    @Patch(':id/active')
+    updateActive(
+        @Param('id') id: number,
+        @Body() activePropertyDto: ActivePropertyDto,
+        @ActiveUser() activeUser: IActiveUser,
+    ) {
+        return this.propertiesService.updateActive(id, activePropertyDto, activeUser);
+    }
+
+    @Patch(':id/restore')
+    @Roles(Role.ADMIN)
+    restore(@Param('id') id: number) {
+        return this.propertiesService.restore(id);
+    }
+
+    @Delete(':id/soft')
+    removeSoft(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.propertiesService.removeSoft(id, activeUser);
+    }
+
+    @Delete(':id')
+    @Roles(Role.ADMIN)
+    remove(@Param('id') id: number) {
+        return this.propertiesService.remove(id);
+    }
 }
