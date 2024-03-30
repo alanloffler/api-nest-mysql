@@ -1,5 +1,7 @@
-import { IsEmail, IsIn, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
+
+import { Role } from '../../common/enums/role.enum';
 
 export class RegisterDto {
     @IsEmail()
@@ -8,6 +10,7 @@ export class RegisterDto {
     @Transform(({ value }) => value.trim())
     @IsString()
     @MinLength(1)
+    @IsOptional()
     name: string;
 
     @Transform(({ value }) => value.trim())
@@ -22,6 +25,7 @@ export class RegisterDto {
     phone?: string;
 
     @Transform(({ value }) => value.trim())
-    @IsIn(['admin', 'user'])
-    type: string;
+    @IsString()
+    @IsOptional()
+    role: Role;
 }

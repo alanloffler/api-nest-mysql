@@ -1,45 +1,48 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
+
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { Role } from '../common/enums/role.enum';
+import { ActiveUser } from '../common/decorators/active-user.decorator';
+import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { Roles } from '../auth/decorators/roles.decorator';
 
+@Auth(Role.USER)
 @Controller('users')
-@UseGuards(AuthGuard)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+    constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+    @Get()
+    @Roles(Role.ADMIN)
+    findAll() {
+        return this.usersService.findAll();
+    }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+    @Get(':id')
+    findOne(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.usersService.findOne(id, activeUser);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.usersService.findOne(id);
-  }
+    @Patch(':id')
+    update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto, @ActiveUser() activeUser: IActiveUser) {
+        return this.usersService.update(id, updateUserDto, activeUser);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
-  }
+    @Patch(':id/restore')
+    @Roles(Role.ADMIN)
+    restore(@Param('id') id: number) {
+        return this.usersService.restore(id);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.usersService.remove(id);
-  }
+    @Delete(':id')
+    @Roles(Role.ADMIN)
+    remove(@Param('id') id: number) {
+        return this.usersService.remove(id);
+    }
+
+    @Delete(':id/soft')
+    removeSoft(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.usersService.removeSoft(id, activeUser);
+    }
 }
