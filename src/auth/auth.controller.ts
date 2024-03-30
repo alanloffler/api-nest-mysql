@@ -2,14 +2,15 @@ import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { IRequest } from 'src/interfaces/request.interface';
-import { AuthGuard } from './guard/auth.guard';
+import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { AuthGuard } from './guards/auth.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from '../common/enums/role.enum';
+import { RolesGuard } from './guards/roles.guard';
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly authService: AuthService
-    ) {}
+    constructor(private readonly authService: AuthService) {}
 
     @Post('register')
     register(@Body() registerDto: RegisterDto) {
@@ -22,8 +23,9 @@ export class AuthController {
     }
 
     @Get('profile')
-    @UseGuards(AuthGuard)
-    profile(@Request() request: IRequest) {
-        return request.user;
+    @Roles(Role.USER)
+    @UseGuards(AuthGuard, RolesGuard)
+    async profile(@Request() user: IActiveUser) {
+        return await this.authService.profile(user);
     }
 }
