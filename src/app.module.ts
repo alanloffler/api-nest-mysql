@@ -9,10 +9,10 @@ import { AuthModule } from './auth/auth.module';
         TypeOrmModule.forRoot({
             type: 'mysql',
             host: 'localhost',
-            port: 3307,
-            username: 'user_room202',
+            port: 8889,
+            username: 'root',
             password: 'root',
-            database: 'db_room202',
+            database: 'api-nest',
             autoLoadEntities: true,
             synchronize: true,
         }),
