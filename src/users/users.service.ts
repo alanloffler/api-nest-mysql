@@ -32,12 +32,12 @@ export class UsersService {
         return await this.userRepository.find();
     }
 
-    async findOne(id: number, user: IActiveUser) {
-        const userExists: User = await this.userRepository.findOneBy({ id });
-        if (!userExists) throw new BadRequestException('User not found');
-        this.validateSameUser(userExists, user);
+    async findOne(id: number, activeUser: IActiveUser) {
+        const user = await this.userRepository.findOneBy({ id });
+        if (!user) throw new BadRequestException('User not found');
+        this.validateSameUser(user, activeUser);
 
-        return userExists;
+        return user;
     }
 
     async update(id: number, updateUserDto: UpdateUserDto, activeUser: IActiveUser) {
