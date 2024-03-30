@@ -11,4 +11,5 @@ import { UsersService } from 'src/users/users.service';
     controllers: [PropertiesController],
     providers: [PropertiesService, UsersService],
 })
+
 export class PropertiesModule {}

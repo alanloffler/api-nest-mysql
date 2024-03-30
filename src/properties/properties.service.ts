@@ -28,10 +28,12 @@ export class PropertiesService {
     }
 
     async update(id: number, updatePropertyDto: UpdatePropertyDto) {
+        // TODO
         // return await this.propertyRepository.update(id, updatePropertyDto);
     }
 
     async remove(id: number) {
         return await this.propertyRepository.delete({ id });
     }
+
 }
