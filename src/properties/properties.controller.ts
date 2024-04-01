@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    UseInterceptors,
+    UploadedFile,
+    ParseFilePipeBuilder,
+    HttpStatus,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { PropertiesService } from './properties.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
@@ -8,6 +21,8 @@ import { Auth } from '../auth/decorators/auth.decorator';
 import { Role } from '../common/enums/role.enum';
 import { ActivePropertyDto } from './dto/active-property.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+
+import { Express } from 'express';
 
 @Auth(Role.USER)
 @Controller('properties')
@@ -62,5 +77,19 @@ export class PropertiesController {
     @Roles(Role.ADMIN)
     remove(@Param('id') id: number) {
         return this.propertiesService.remove(id);
+    }
+
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    public async uploadImage(
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({ fileType: '.(png|jpeg|jpg)' })
+                .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
+        )
+        file: Express.Multer.File,
+    ) {
+        console.log(file);
+        return file;
     }
 }
