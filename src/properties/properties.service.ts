@@ -20,7 +20,6 @@ export class PropertiesService {
     async create(createPropertyDto: CreatePropertyDto, activeUser: IActiveUser) {
         const user = await this.usersService.findOne(activeUser.id, activeUser);
         if (!user) throw new BadRequestException('User not found');
-
         return await this.propertyRepository.save({ ...createPropertyDto, created_by: activeUser.id });
     }
 
@@ -34,7 +33,10 @@ export class PropertiesService {
         const property = await this.validateProperty(id);
         this.validateSameUser(property, activeUser);
 
-        return await this.propertyRepository.findOneBy({ id });
+        return await this.propertyRepository.findOne({
+            where: { id },
+            relations: { images: true }
+        });
     }
 
     async update(id: number, updatePropertyDto: UpdatePropertyDto, @ActiveUser() activeUser: IActiveUser) {
@@ -54,8 +56,8 @@ export class PropertiesService {
     async removeSoft(id: number, activeUser: IActiveUser) {
         const property = await this.validateProperty(id);
         this.validateSameUser(property, activeUser);
-
-        return await this.propertyRepository.softDelete({ id });
+        console.log(property);
+        return await this.propertyRepository.softDelete(property);
     }
 
     async restore(id: number) {
@@ -72,13 +74,13 @@ export class PropertiesService {
         return await this.propertyRepository.delete({ id });
     }
 
-    private async validateProperty(id: number) {
-        const property = await this.propertyRepository.findOneBy({ id });
+    async validateProperty(id: number) {
+        const property = await this.propertyRepository.findOne({ where: { id }, relations: { images: true} });
         if (!property) throw new BadRequestException('Property not found');
         return property;
     }
 
-    private validateSameUser(property: Property, activeUser: IActiveUser) {
+    validateSameUser(property: Property, activeUser: IActiveUser) {
         if (activeUser.role !== Role.ADMIN && property.created_by !== activeUser.id)
             throw new UnauthorizedException('Ownership is required');
     }
