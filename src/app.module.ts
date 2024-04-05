@@ -3,6 +3,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PropertiesModule } from './properties/properties.module';
 import { AuthModule } from './auth/auth.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
         UsersModule,
         PropertiesModule,
         AuthModule,
+        ImagesModule,
     ],
     controllers: [],
     providers: [],
