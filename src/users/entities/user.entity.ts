@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, UpdateDa
 
 import { Role } from '../../common/enums/role.enum';
 import { Property } from '../../properties/entities/property.entity';
+import { Image } from '../../images/entities/image.entity';
 
 @Entity()
 export class User {
@@ -34,4 +35,7 @@ export class User {
 
     @OneToMany(() => Property, (property) => property.created_by)
     properties: Property[];
+
+    @OneToMany(() => Image, (image) => image.uploaded_by)
+    images: Image[];
 }
