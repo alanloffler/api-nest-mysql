@@ -1,5 +1,15 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    UpdateDateColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Image } from '../../images/entities/image.entity';
 
 @Entity()
 export class Property {
@@ -30,6 +40,9 @@ export class Property {
     @Column()
     price: number;
 
+    @OneToMany(() => Image, (image) => image.property, { cascade: true })
+    images: Image[];
+
     @CreateDateColumn()
     created_at: Date;
 
@@ -37,7 +50,7 @@ export class Property {
     updated_at: Date;
 
     @DeleteDateColumn()
-    deleted_at: Date;
+    deletedAt: Date;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
