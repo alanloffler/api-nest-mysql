@@ -6,6 +6,7 @@ import { ImagesModule } from './images/images.module';
 import { PropertiesModule } from './properties/properties.module';
 import { UsersModule } from './users/users.module';
 import { CategorySubscriber } from './categories/category.subscriber';
+import { BusinessModule } from './business/business.module';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { CategorySubscriber } from './categories/category.subscriber';
         ImagesModule,
         PropertiesModule,
         UsersModule,
+        BusinessModule,
     ],
     controllers: [],
     providers: [],
