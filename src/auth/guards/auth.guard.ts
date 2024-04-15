@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { JWT } from '../constants/jwt.constant';
@@ -11,13 +11,13 @@ export class AuthGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
 
         const tokenExists = this.getTokenFromHeader(request);
-        if (!tokenExists) throw new UnauthorizedException('Token not found');
+        if (!tokenExists) throw new HttpException('Token not found', HttpStatus.UNAUTHORIZED);
 
         try {
             const payload = await this.jwtService.verifyAsync(tokenExists, { secret: JWT.secret });
             request.user = payload;
         } catch {
-            throw new UnauthorizedException('Token not valid');
+            throw new HttpException('Token not valid', HttpStatus.UNAUTHORIZED);
         }
 
         return true;
