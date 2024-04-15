@@ -1,15 +1,16 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Image } from './entities/image.entity';
+import { Module, forwardRef } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { diskStorage } from 'multer';
-import { ImagesService } from './images.service';
+import { CategoriesModule } from '../categories/categories.module';
+import { CategoriesService } from '../categories/categories.service';
+import { Image } from './entities/image.entity';
 import { ImagesController } from './images.controller';
-// import { PropertiesModule } from '../properties/properties.service';
-import { PropertiesModule } from 'src/properties/properties.module';
-import { PropertiesService } from 'src/properties/properties.service';
-import { UsersModule } from 'src/users/users.module';
-import { UsersService } from 'src/users/users.service';
+import { ImagesService } from './images.service';
+import { PropertiesModule } from '../properties/properties.module';
+import { PropertiesService } from '../properties/properties.service';
+import { UsersModule } from '../users/users.module';
+import { UsersService } from '../users/users.service';
 
 @Module({
     imports: [
@@ -24,11 +25,12 @@ import { UsersService } from 'src/users/users.service';
                 }),
             }),
         }),
-        PropertiesModule,
-        UsersModule
+        CategoriesModule,
+        forwardRef(() => PropertiesModule),
+        UsersModule,
     ],
     controllers: [ImagesController],
-    providers: [ImagesService, PropertiesService, UsersService],
+    providers: [ImagesService, UsersService, CategoriesService, PropertiesService],
     exports: [TypeOrmModule, ImagesService]
 })
 export class ImagesModule {}
