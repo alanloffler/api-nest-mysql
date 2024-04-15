@@ -9,7 +9,7 @@ import {
     UploadedFile,
     ParseFilePipeBuilder,
     HttpStatus,
-    BadRequestException,
+    HttpException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
@@ -29,6 +29,11 @@ export class ImagesController {
     @Get()
     findAll(@ActiveUser() activeUser: IActiveUser) {
         return this.imagesService.findAll(activeUser);
+    }
+
+    @Get(':id/allByProperty')
+    findAllByProperty(@Param('id') id: number) {
+        return this.imagesService.findAllByProperty(id);
     }
 
     @Get(':id')
@@ -66,7 +71,7 @@ export class ImagesController {
         @ActiveUser() activeUser: IActiveUser,
     ) {
         console.log(file, id);
-        if (!file) throw new BadRequestException('File not uploaded');
+        if (!file) throw new HttpException('File not uploaded', HttpStatus.BAD_REQUEST);
         const createImageDto: CreateImageDto = { name: file.filename, propertyId: id, uploaded_by: activeUser.id };
         return await this.imagesService.create(createImageDto, activeUser);
     }
