@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Image } from './entities/image.entity';
@@ -11,21 +11,28 @@ import { Role } from '../common/enums/role.enum';
 @Injectable()
 export class ImagesService {
     constructor(
+        @Inject(forwardRef(() => PropertiesService)) private readonly propertiesService: PropertiesService,
         @InjectRepository(Image) private imageRepository: Repository<Image>,
-        private readonly propertiesService: PropertiesService,
     ) {}
 
     async create(createImageDto: CreateImageDto, activeUser: IActiveUser) {
-        // console.log(createImageDto.propertyId);//ok
         const propertyFound = await this.propertiesService.findOne(createImageDto.propertyId, activeUser);
         this.propertiesService.validateSameUser(propertyFound, activeUser);
-        // console.log(createImageDto);//ok
-        return await this.imageRepository.save(createImageDto);
+
+        const imageCreated = await this.imageRepository.save(createImageDto);
+        if (!imageCreated) throw new HttpException('Image not created', HttpStatus.BAD_REQUEST);
+
+        return new HttpException('Image created', HttpStatus.OK);
     }
 
     async findAll(activeUser: IActiveUser) {
         if (activeUser.role === Role.ADMIN) return await this.imageRepository.find();
         return await this.imageRepository.find({ where: { uploaded_by: activeUser.id } });
+    }
+
+    async findAllByProperty(id: number) {
+        // check if property exists
+        return await this.imageRepository.find({ where: { propertyId: id } });
     }
 
     async findOne(id: number, activeUser: IActiveUser) {
@@ -39,6 +46,7 @@ export class ImagesService {
     // Remove all files from uploads folder and database.
     // First restore if there are soft deleted images
     async remove(propertyId: number) {
+        console.log(propertyId);
         // try {
         //     const allImages = await this.imageRepository.find({
         //         where: { property_id: propertyId },
@@ -78,13 +86,14 @@ export class ImagesService {
     // }
 
     async removeSoft(id: number, activeUser: IActiveUser) {
+        // throw new HttpException('Image not deleted', HttpStatus.BAD_REQUEST);
         const imageFound = await this.imageRepository.findOneBy({ id });
         if (!imageFound) throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
         this.validateSameUser(imageFound, activeUser);
 
         const deleted = await this.imageRepository.softDelete({ id });
         if (deleted.affected === 0) throw new HttpException('Image not deleted', HttpStatus.BAD_REQUEST);
-        throw new HttpException('Image deleted', HttpStatus.OK);
+        return { message: 'Image deleted', status: HttpStatus.OK };
     }
 
     async restore(id: number) {

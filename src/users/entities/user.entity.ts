@@ -25,13 +25,13 @@ export class User {
     phone: string;
 
     @CreateDateColumn()
-    created_at: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    updated_at: Date;
+    updatedAt: Date;
 
     @DeleteDateColumn()
-    deleted_at: Date;
+    deletedAt: Date;
 
     @OneToMany(() => Property, (property) => property.created_by)
     properties: Property[];

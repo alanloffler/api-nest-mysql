@@ -1,4 +1,4 @@
-import { IsNumber, IsPositive, IsString, IsIn, MinLength } from 'class-validator';
+import { IsNumber, IsPositive, IsString, IsIn, MinLength, Max } from 'class-validator';
 
 export class CreatePropertyDto {
     @IsString()
@@ -30,5 +30,22 @@ export class CreatePropertyDto {
 
     @IsNumber()
     @IsPositive()
+    @Max(1000000000)
     price: number;
+    
+    @IsString()
+    @MinLength(1)
+    street: string;
+    
+    @IsString()
+    @MinLength(1)
+    city: string;
+    
+    @IsString()
+    @MinLength(1)
+    state: string;
+    
+    @IsString()
+    @MinLength(1)
+    zip: string
 }

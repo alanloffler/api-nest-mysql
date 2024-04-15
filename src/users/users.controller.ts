@@ -1,11 +1,11 @@
 import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Auth } from '../auth/decorators/auth.decorator';
-import { Role } from '../common/enums/role.enum';
 import { ActiveUser } from '../common/decorators/active-user.decorator';
+import { Auth } from '../auth/decorators/auth.decorator';
 import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { Role } from '../common/enums/role.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
 
 @Auth(Role.USER)
 @Controller('users')
@@ -13,19 +13,24 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Get()
-    @Roles(Role.ADMIN)
-    findAll() {
-        return this.usersService.findAll();
+    findAll(@ActiveUser() activeUser: IActiveUser) {
+        return this.usersService.findAll(activeUser);
     }
 
     @Get(':id')
-    findOne(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
-        return this.usersService.findOne(id, activeUser);
+    findOne(@Param('id') id: number) {
+        return this.usersService.findOne(id);
+    }
+
+    @Auth(Role.ADMIN)
+    @Get(':id/withDeleted')
+    findOneWithDeleted(@Param('id') id: number) {
+        return this.usersService.findOneWithDeleted(id);
     }
 
     @Patch(':id')
     update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto, @ActiveUser() activeUser: IActiveUser) {
-        return this.usersService.update(id, updateUserDto, activeUser);
+        return this.usersService.update(id, updateUserDto);
     }
 
     @Patch(':id/restore')
@@ -42,6 +47,6 @@ export class UsersController {
 
     @Delete(':id/soft')
     removeSoft(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
-        return this.usersService.removeSoft(id, activeUser);
+        return this.usersService.removeSoft(id);
     }
 }

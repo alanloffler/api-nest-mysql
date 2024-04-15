@@ -44,6 +44,7 @@ export class PropertiesController {
         @Body() activePropertyDto: ActivePropertyDto,
         @ActiveUser() activeUser: IActiveUser,
     ) {
+        console.log(activePropertyDto);
         return this.propertiesService.updateActive(id, activePropertyDto, activeUser);
     }
 
@@ -62,5 +63,22 @@ export class PropertiesController {
     @Roles(Role.ADMIN)
     remove(@Param('id') id: number) {
         return this.propertiesService.remove(id);
+    }
+
+    // DASHBOARD
+    @Get(':amount/latest')
+    findLatest(@Param('amount') amount: number) {
+        return this.propertiesService.findLatest(amount);
+    }
+
+    // @Get('dashboard/propertiesByCategories')
+    // propertiesByCategories() {
+    //     return this.propertiesService.propertiesByCategories();
+    // }
+    
+    @Get('dashboard/dashboardStats')
+    countByCreator(@ActiveUser() activeUser: IActiveUser) {
+        // return this.propertiesService.countByCreator(activeUser);
+        return this.propertiesService.dashboardStats(activeUser);
     }
 }

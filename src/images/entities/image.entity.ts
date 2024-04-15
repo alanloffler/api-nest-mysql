@@ -8,7 +8,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Property } from '../../properties/entities/property.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Image {
@@ -18,7 +18,7 @@ export class Image {
     @Column()
     name: string;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, {onDelete: 'CASCADE' })
     @JoinColumn({ name: 'uploaded_by', referencedColumnName: 'id' })
     user: User;
     @Column()

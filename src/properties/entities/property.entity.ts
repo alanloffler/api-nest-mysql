@@ -40,7 +40,7 @@ export class Property {
     @Column()
     price: number;
 
-    @OneToMany(() => Image, (image) => image.property, { cascade: true })
+    @OneToMany(() => Image, (image) => image.property, { cascade: true, onDelete: 'CASCADE' })
     images: Image[];
 
     @CreateDateColumn()
@@ -52,10 +52,22 @@ export class Property {
     @DeleteDateColumn()
     deletedAt: Date;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
     user: User;
 
     @Column()
     created_by: number;
+
+    @Column()
+    street: string;
+
+    @Column()
+    city: string;
+
+    @Column()
+    state: string;
+
+    @Column()
+    zip: string;
 }
