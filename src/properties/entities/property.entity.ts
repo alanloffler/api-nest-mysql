@@ -40,7 +40,8 @@ export class Property {
     @Column()
     price: number;
 
-    @OneToMany(() => Image, (image) => image.property, { cascade: true, onDelete: 'CASCADE' })
+    // @OneToMany(() => Image, (image) => image.property, { cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => Image, (image) => image.property)
     images: Image[];
 
     @CreateDateColumn()
