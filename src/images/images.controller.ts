@@ -10,15 +10,16 @@ import {
     ParseFilePipeBuilder,
     HttpStatus,
     HttpException,
+    ParseIntPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { ImagesService } from './images.service';
-import { Auth } from '../auth/decorators/auth.decorator';
-import { Role } from '../common/enums/role.enum';
 import { ActiveUser } from '../common/decorators/active-user.decorator';
-import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { Auth } from '../auth/decorators/auth.decorator';
 import { CreateImageDto } from './dto/create-image.dto';
+import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { ImagesService } from './images.service';
+import { Role } from '../common/enums/role.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 @Auth(Role.USER)
@@ -32,30 +33,46 @@ export class ImagesController {
     }
 
     @Get(':id/allByProperty')
-    findAllByProperty(@Param('id') id: number) {
+    findAllByProperty(@Param('id', ParseIntPipe) id: number) {
         return this.imagesService.findAllByProperty(id);
     }
 
+    @Get(':id/allByPropertyWithDeleted')
+    @Roles(Role.ADMIN)
+    findAllByPropertyWithDeleted(@Param('id', ParseIntPipe) id: number) {
+        return this.imagesService.findAllByPropertyWithDeleted(id);
+    }
+
     @Get(':id')
-    findOne(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    findOne(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.imagesService.findOne(id, activeUser);
     }
 
     @Patch(':id/restore')
     @Roles(Role.ADMIN)
-    restore(@Param('id') id: number) {
+    restore(@Param('id', ParseIntPipe) id: number) {
         return this.imagesService.restore(id);
     }
 
     @Delete(':id/soft')
-    removeSoft(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    removeSoft(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.imagesService.removeSoft(id, activeUser);
     }
 
+    @Delete(':id/softMany')
+    removeSoftMany(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.imagesService.removeSoftMany(id, activeUser);
+    }
+
     @Delete(':propertyId')
-    @Roles(Role.ADMIN)
-    remove(@Param('propertyId') propertyId: number) {
+    remove(@Param('propertyId', ParseIntPipe) propertyId: number) {
         return this.imagesService.remove(propertyId);
+    }
+
+    @Delete(':id/many')
+    @Roles(Role.ADMIN)
+    removeMany(@Param('id', ParseIntPipe) id: number) {
+        return this.imagesService.removeMany(id);
     }
 
     @Post('upload/:id')
@@ -67,7 +84,7 @@ export class ImagesController {
                 .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
         )
         file: Express.Multer.File,
-        @Param('id') id: number,
+        @Param('id', ParseIntPipe) id: number,
         @ActiveUser() activeUser: IActiveUser,
     ) {
         console.log(file, id);
