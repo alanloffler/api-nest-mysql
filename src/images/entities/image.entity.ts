@@ -24,7 +24,7 @@ export class Image {
     @Column()
     uploaded_by: number;
 
-    @ManyToOne(() => Property, (property) => property.images, { onDelete: 'CASCADE', onUpdate: 'CASCADE' } )
+    @ManyToOne(() => Property, (property) => property.images, { onDelete: 'CASCADE', orphanedRowAction: 'delete' } )
     property: Property;
     @Column({ nullable: true })
     propertyId: number;
