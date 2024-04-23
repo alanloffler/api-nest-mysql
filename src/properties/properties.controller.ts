@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { PropertiesService } from './properties.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
@@ -25,13 +25,19 @@ export class PropertiesController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    findOne(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.findOne(id, activeUser);
+    }
+    
+    @Get(':id/withDeleted')
+    @Roles(Role.ADMIN)
+    findOneWithDeleted(@Param('id', ParseIntPipe) id: number) {
+        return this.propertiesService.findOneWithDeleted(id);
     }
 
     @Patch(':id')
     update(
-        @Param('id') id: number,
+        @Param('id', ParseIntPipe) id: number,
         @Body() updatePropertyDto: UpdatePropertyDto,
         @ActiveUser() activeUser: IActiveUser,
     ) {
@@ -40,7 +46,7 @@ export class PropertiesController {
 
     @Patch(':id/active')
     updateActive(
-        @Param('id') id: number,
+        @Param('id', ParseIntPipe) id: number,
         @Body() activePropertyDto: ActivePropertyDto,
         @ActiveUser() activeUser: IActiveUser,
     ) {
@@ -50,35 +56,29 @@ export class PropertiesController {
 
     @Patch(':id/restore')
     @Roles(Role.ADMIN)
-    restore(@Param('id') id: number) {
+    restore(@Param('id', ParseIntPipe) id: number) {
         return this.propertiesService.restore(id);
     }
 
     @Delete(':id/soft')
-    removeSoft(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    removeSoft(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.removeSoft(id, activeUser);
     }
 
     @Delete(':id')
     @Roles(Role.ADMIN)
-    remove(@Param('id') id: number) {
+    remove(@Param('id', ParseIntPipe) id: number) {
         return this.propertiesService.remove(id);
     }
 
     // DASHBOARD
     @Get(':amount/latest')
-    findLatest(@Param('amount') amount: number) {
+    findLatest(@Param('amount', ParseIntPipe) amount: number) {
         return this.propertiesService.findLatest(amount);
     }
-
-    // @Get('dashboard/propertiesByCategories')
-    // propertiesByCategories() {
-    //     return this.propertiesService.propertiesByCategories();
-    // }
     
     @Get('dashboard/dashboardStats')
     countByCreator(@ActiveUser() activeUser: IActiveUser) {
-        // return this.propertiesService.countByCreator(activeUser);
         return this.propertiesService.dashboardStats(activeUser);
     }
 }
