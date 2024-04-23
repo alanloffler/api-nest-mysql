@@ -18,7 +18,7 @@ import { UsersService } from '../users/users.service';
         MulterModule.registerAsync({
             useFactory: () => ({
                 storage: diskStorage({
-                    destination: './uploads',
+                    destination: '../room202/src/assets/photos',
                     filename: (req: Express.Request, file: Express.Multer.File, callback: any) => {
                         callback(null, crypto.randomUUID() + '.' + file.originalname.split('.').pop());
                     },
