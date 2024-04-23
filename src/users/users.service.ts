@@ -13,9 +13,12 @@ export class UsersService {
     constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
     async create(createUserDto: CreateUserDto) {
-        const newUser = this.userRepository.create(createUserDto);
+        const user = this.userRepository.create(createUserDto);
 
-        return await this.userRepository.save(newUser);
+        const userCreated = await this.userRepository.save(user);
+        if (!userCreated) throw new HttpException('User not created', HttpStatus.BAD_REQUEST);
+
+        return { statusCode: HttpStatus.OK, message: 'User created' };
     }
 
     async findOneByEmail(email: string) {
@@ -36,10 +39,10 @@ export class UsersService {
     }
 
     async findOne(id: number) {
-        const user = await this.userRepository.findOneBy({ id });
-        if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        const userFound = await this.userRepository.findOneBy({ id });
+        if (!userFound) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-        return user;
+        return userFound;
     }
 
     async findOneWithDeleted(id: number) {
@@ -59,7 +62,7 @@ export class UsersService {
         const userUpdated = await this.userRepository.update(id, { ...updateUserDto });
         if (userUpdated.affected === 0) throw new HttpException('User not updated', HttpStatus.BAD_REQUEST);
 
-        return new HttpException('User updated', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'User updated' };
     }
 
     async restore(id: number) {
@@ -68,7 +71,7 @@ export class UsersService {
         const restoreUser = await this.userRepository.restore({ id });
         if (restoreUser.affected === 0) throw new HttpException('User not restored', HttpStatus.NOT_MODIFIED);
 
-        return new HttpException('User restored', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'User restored' };
     }
 
     async remove(id: number) {
@@ -81,7 +84,7 @@ export class UsersService {
         const userDeleted = await this.userRepository.delete({ id });
         if (userDeleted.affected === 0) throw new HttpException('User not deleted', HttpStatus.BAD_REQUEST);
 
-        return new HttpException('User deleted', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'User deleted' };
     }
 
     async removeSoft(id: number) {
@@ -89,9 +92,6 @@ export class UsersService {
         const userSoftRemoved = await this.userRepository.softDelete({ id });
         if (userSoftRemoved.affected === 0) throw new HttpException('User not deleted', HttpStatus.BAD_REQUEST);
 
-        return new HttpException('User deleted', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'User deleted' };
     }
-    // private validateSameUser(user: User, activeUser: IActiveUser) {
-    //     if (activeUser.role !== Role.ADMIN && user.id !== activeUser.id) throw new UnauthorizedException('Ownership is required');
-    // }
 }
