@@ -32,11 +32,12 @@ export class PropertiesService {
     }
 
     async findAll(activeUser: IActiveUser) {
-        if (activeUser.role === Role.ADMIN) return await this.propertyRepository.find({
-            withDeleted: true,
-            order: { created_at: 'DESC' },
-            relations: { user: true },
-        });
+        if (activeUser.role === Role.ADMIN)
+            return await this.propertyRepository.find({
+                withDeleted: true,
+                order: { created_at: 'DESC' },
+                relations: { user: true },
+            });
 
         const properties = await this.propertyRepository.find({
             where: { created_by: activeUser.id },
@@ -54,7 +55,7 @@ export class PropertiesService {
 
         return await this.propertyRepository.findOne({
             where: { id },
-            relations: { images: true },
+            relations: { images: true, user: true },
         });
     }
 
@@ -62,7 +63,7 @@ export class PropertiesService {
         const propertyDeleted = await this.propertyRepository.findOne({
             where: { id },
             withDeleted: true,
-            relations: { images: true },
+            relations: { images: true, user: true },
         });
         if (!propertyDeleted) throw new HttpException('Property not found', HttpStatus.NOT_FOUND);
 
@@ -112,7 +113,7 @@ export class PropertiesService {
         if (deletedImages.statusCode !== HttpStatus.OK)
             throw new HttpException('Property not deleted. Error when deleting images', HttpStatus.BAD_REQUEST);
         if (deletedImages.statusCode === 200 || property.images.length === 0) {
-        //    await this.propertyRepository.update(id, { is_active: 0 });
+            await this.propertyRepository.update(id, { is_active: 0 });
             const propertyDeleted = await this.propertyRepository.softDelete({ id });
             if (propertyDeleted.affected === 0) throw new HttpException('Property not deleted', HttpStatus.NOT_MODIFIED);
 
