@@ -7,6 +7,7 @@ import { PropertiesModule } from './properties/properties.module';
 import { UsersModule } from './users/users.module';
 import { CategorySubscriber } from './categories/category.subscriber';
 import { BusinessModule } from './business/business.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { BusinessModule } from './business/business.module';
         PropertiesModule,
         UsersModule,
         BusinessModule,
+        FavoritesModule,
     ],
     controllers: [],
     providers: [],
