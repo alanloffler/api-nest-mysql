@@ -4,30 +4,31 @@ import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { IResponse } from '../common/interfaces/response.interface';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
     constructor(@InjectRepository(Category) private categoryRepository: Repository<Category>) {}
 
-    async create(createCategoryDto: CreateCategoryDto, activeUser: IActiveUser): Promise<HttpException> {
+    async create(createCategoryDto: CreateCategoryDto, activeUser: IActiveUser): Promise<IResponse | HttpException> {
         const newCategory = this.categoryRepository.create({ ...createCategoryDto, createdBy: activeUser.id });
 
         const categoryCreated = await this.categoryRepository.save(newCategory);
         if (!categoryCreated) throw new HttpException('Category not created', HttpStatus.BAD_REQUEST);
 
-        return new HttpException('Category created', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'Category created' };
     }
 
     async findAll(): Promise<Category[]> {
-        const categories = await this.categoryRepository.find();
+        const categories = await this.categoryRepository.find({ order: { name: 'ASC' } });
         if (categories.length === 0) throw new HttpException('Categories not found', HttpStatus.NOT_FOUND);
 
         return categories;
     }
 
     async findAllWithDeleted(): Promise<Category[]> {
-        const categories = await this.categoryRepository.find({ withDeleted: true });
+        const categories = await this.categoryRepository.find({ withDeleted: true, order: { name: 'ASC' } });
         if (categories.length === 0) throw new HttpException('Categories not found', HttpStatus.NOT_FOUND);
 
         return categories;
@@ -47,7 +48,7 @@ export class CategoriesService {
         return category;
     }
 
-    async update(id: number, updateCategoryDto: UpdateCategoryDto, activeUser: IActiveUser): Promise<HttpException> {
+    async update(id: number, updateCategoryDto: UpdateCategoryDto, activeUser: IActiveUser): Promise<IResponse | HttpException> {
         await this.findOne(id);
 
         const categoryUpdated = await this.categoryRepository.update(id, {
@@ -58,11 +59,11 @@ export class CategoriesService {
         if (categoryUpdated.affected === 0) {
             throw new HttpException('Category not updated', HttpStatus.BAD_REQUEST);
         } else {
-            return new HttpException('Category updated', HttpStatus.OK);
+            return { statusCode: HttpStatus.OK, message: 'Category updated' };
         }
     }
 
-    async remove(id: number): Promise<HttpException> {
+    async remove(id: number): Promise<IResponse | HttpException> {
         const categoryFound = await this.findOneWithDeleted(id);
         if (categoryFound.deletedAt !== null) {
             const categoryRestored = await this.categoryRepository.restore({ id: id });
@@ -72,10 +73,10 @@ export class CategoriesService {
         const categoryDeleted = await this.categoryRepository.delete(id);
         if (categoryDeleted.affected === 0) throw new HttpException('Category not deleted', HttpStatus.BAD_REQUEST);
 
-        return new HttpException('Category deleted', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'Category deleted' };
     }
 
-    async removeSoft(id: number, activeUser: IActiveUser): Promise<HttpException> {
+    async removeSoft(id: number, activeUser: IActiveUser): Promise<IResponse | HttpException> {
         await this.findOne(id);
 
         const categoryUpdated = await this.categoryRepository.update(id, { updatedBy: activeUser.id });
@@ -84,10 +85,10 @@ export class CategoriesService {
         const categoryDeleted = await this.categoryRepository.softDelete({ id: id });
         if (categoryDeleted.affected === 0) throw new HttpException('Category not deleted', HttpStatus.BAD_REQUEST);
 
-        return new HttpException('Category deleted', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'Category deleted' };
     }
 
-    async restore(id: number, activeUser: IActiveUser): Promise<HttpException> {
+    async restore(id: number, activeUser: IActiveUser): Promise<IResponse | HttpException> {
         const softDeletedCategories = await this.findOneWithDeleted(id);
         if (softDeletedCategories) {
             if (softDeletedCategories.deletedAt === null) {
@@ -99,7 +100,7 @@ export class CategoriesService {
                 const categoryRestored = await this.categoryRepository.restore({ id: id });
                 if (categoryRestored.affected === 0) throw new HttpException('Category not restored', HttpStatus.NOT_MODIFIED);
 
-                return new HttpException('Category restored', HttpStatus.OK);
+                return { statusCode: HttpStatus.OK, message: 'Category restored' };
             }
         } else {
             throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
