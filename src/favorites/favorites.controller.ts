@@ -20,6 +20,11 @@ export class FavoritesController {
         return this.favoritesService.findAll(activeUser);
     }
 
+    @Get(':id')
+    findOne(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.favoritesService.findOne(id, activeUser);
+    }
+
     @Delete(':id')
     remove(@Param('id', ParseIntPipe) id: number) {
         return this.favoritesService.remove(id);

@@ -43,6 +43,11 @@ export class FavoritesService {
         return favorites;
     }
 
+    async findOne(id: number, activeUser: IActiveUser) {
+        const favorite = await this.favoriteRepository.findOneBy({ propertyId: id, userId: activeUser.id });
+        return favorite;
+    }
+
     async remove(id: number) {
         const deleteFavorite = await this.favoriteRepository.delete({ propertyId: id });
         if (deleteFavorite.affected === 0) throw new HttpException('Favorite not deleted', HttpStatus.BAD_REQUEST);
