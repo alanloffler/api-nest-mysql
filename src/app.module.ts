@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { BusinessModule } from './business/business.module';
 import { CategoriesModule } from './categories/categories.module';
+import { CategorySubscriber } from './categories/category.subscriber';
+import { FavoritesModule } from './favorites/favorites.module';
 import { ImagesModule } from './images/images.module';
 import { PropertiesModule } from './properties/properties.module';
+import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
-import { CategorySubscriber } from './categories/category.subscriber';
-import { BusinessModule } from './business/business.module';
-import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
     imports: [
@@ -23,12 +24,13 @@ import { FavoritesModule } from './favorites/favorites.module';
             subscribers: [CategorySubscriber],
         }),
         AuthModule,
+        BusinessModule,
         CategoriesModule,
+        FavoritesModule,
         ImagesModule,
         PropertiesModule,
+        SettingsModule,
         UsersModule,
-        BusinessModule,
-        FavoritesModule,
     ],
     controllers: [],
     providers: [],
