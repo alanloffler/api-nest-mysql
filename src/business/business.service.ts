@@ -4,18 +4,19 @@ import { Repository } from 'typeorm';
 import { Business } from './entities/business.entity';
 import { CreateBusinessDto } from './dto/create-business.dto';
 import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { IResponse } from '../common/interfaces/response.interface';
 import { UpdateBusinessDto } from './dto/update-business.dto';
 
 @Injectable()
 export class BusinessService {
     constructor(@InjectRepository(Business) private businessRepository: Repository<Business>) {}
 
-    async create(createBusinessDto: CreateBusinessDto, activeUser: IActiveUser): Promise<HttpException> {
+    async create(createBusinessDto: CreateBusinessDto, activeUser: IActiveUser): Promise<IResponse | HttpException> {
         const newBusiness = this.businessRepository.create({ ...createBusinessDto, createdBy: activeUser.id });
         const businessCreated = await this.businessRepository.save(newBusiness);
         if (!businessCreated) throw new HttpException('Business not created', HttpStatus.BAD_REQUEST);
         
-        return new HttpException('Business created', HttpStatus.CREATED);
+        return { statusCode: HttpStatus.OK, message: 'Business created' };
     }
 
     async findAll(): Promise<Business[]> {
@@ -59,7 +60,7 @@ export class BusinessService {
         }
     }
 
-    async remove(id: number): Promise<HttpException> {
+    async remove(id: number): Promise<IResponse | HttpException> {
         const businessFound = await this.findOneWithDeleted(id);
         if (businessFound.deletedAt !== null) {
             const businessRestored = await this.businessRepository.restore({ id: id });
@@ -69,10 +70,10 @@ export class BusinessService {
         const businessDeleted = await this.businessRepository.delete(id);
         if (businessDeleted.affected === 0) throw new HttpException('Business not deleted', HttpStatus.BAD_REQUEST);
         
-        return new HttpException('Business deleted', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'Business deleted' };
     }
 
-    async removeSoft(id: number, activeUser: IActiveUser): Promise<HttpException> {
+    async removeSoft(id: number, activeUser: IActiveUser): Promise<IResponse | HttpException> {
         await this.findOne(id);
         
         const businessUpdated = await this.businessRepository.update(id, { updatedBy: activeUser.id });
@@ -81,10 +82,10 @@ export class BusinessService {
         const businessDeleted = await this.businessRepository.softDelete({ id: id });
         if (businessDeleted.affected === 0) throw new HttpException('Business not deleted', HttpStatus.BAD_REQUEST);
         
-        return new HttpException('Business deleted', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'Business deleted'};
     }
 
-    async restore(id: number, activeUser: IActiveUser): Promise<HttpException> {
+    async restore(id: number, activeUser: IActiveUser): Promise<IResponse | HttpException> {
         const softDeletedBusiness = await this.findOneWithDeleted(id);
         if (softDeletedBusiness) {
             if (softDeletedBusiness.deletedAt === null) {
@@ -96,7 +97,7 @@ export class BusinessService {
                 const businessRestored = await this.businessRepository.restore({ id: id });
                 if (businessRestored.affected === 0) throw new HttpException('Business not restored', HttpStatus.NOT_MODIFIED);
                 
-                return new HttpException('Business restored', HttpStatus.OK);
+                return { statusCode: HttpStatus.OK, message: 'Business restored' };
             }
         } else {
             throw new HttpException('Business not found', HttpStatus.NOT_FOUND);
