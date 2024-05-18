@@ -7,6 +7,7 @@ import { CategorySubscriber } from './categories/category.subscriber';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ImagesModule } from './images/images.module';
 import { PropertiesModule } from './properties/properties.module';
+import { RolesModule } from './roles/roles.module';
 import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
 
@@ -29,8 +30,10 @@ import { UsersModule } from './users/users.module';
         FavoritesModule,
         ImagesModule,
         PropertiesModule,
+        RolesModule,
         SettingsModule,
         UsersModule,
+        RolesModule,
     ],
     controllers: [],
     providers: [],
