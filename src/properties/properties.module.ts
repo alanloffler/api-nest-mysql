@@ -8,10 +8,11 @@ import { Property } from './entities/property.entity';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { ImagesModule } from '../images/images.module';
-import { ImagesService } from 'src/images/images.service';
+import { ImagesService } from '../images/images.service';
+import { FavoritesModule } from 'src/favorites/favorites.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Property]), UsersModule, CategoriesModule, forwardRef(() => ImagesModule)],
+    imports: [TypeOrmModule.forFeature([Property]), UsersModule, CategoriesModule, forwardRef(() => ImagesModule), forwardRef(() => FavoritesModule)],
     controllers: [PropertiesController],
     providers: [PropertiesService, UsersService, CategoriesService, ImagesService],
     exports: [TypeOrmModule, PropertiesService],

@@ -19,6 +19,11 @@ export class PropertiesController {
         return this.propertiesService.create(createPropertyDto, activeUser);
     }
 
+    @Get('/client')
+    findAllClient() {
+        return this.propertiesService.findAllClient();
+    }
+    
     @Get()
     findAll(@ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.findAll(activeUser);

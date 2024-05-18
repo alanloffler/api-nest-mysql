@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Image } from '../../images/entities/image.entity';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @Entity()
 export class Property {
@@ -39,7 +40,9 @@ export class Property {
 
     @Column()
     price: number;
-
+    
+    @OneToMany(() => Favorite, favorite => favorite.propertyId)
+    favorites: Favorite[];
     // @OneToMany(() => Image, (image) => image.property, { cascade: true, onDelete: 'CASCADE' })
     @OneToMany(() => Image, (image) => image.property)
     images: Image[];

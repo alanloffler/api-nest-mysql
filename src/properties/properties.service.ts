@@ -49,6 +49,15 @@ export class PropertiesService {
         return properties;
     }
 
+    async findAllClient() {
+        const properties = await this.propertyRepository.find({
+            order: { created_at: 'DESC' },
+            relations: { user: true },
+        });
+        if (!properties) throw new HttpException('Properties not found', HttpStatus.NOT_FOUND);
+        return properties;
+    }
+
     async findOne(id: number, activeUser: IActiveUser) {
         const property = await this.validateProperty(id);
         this.validateSameUser(property, activeUser);
@@ -66,7 +75,6 @@ export class PropertiesService {
             relations: { images: true, user: true },
         });
         if (!propertyDeleted) throw new HttpException('Property not found', HttpStatus.NOT_FOUND);
-
         return propertyDeleted;
     }
 
@@ -75,7 +83,7 @@ export class PropertiesService {
         this.validateSameUser(property, activeUser);
         const categoryUpdated = await this.propertyRepository.update(id, { ...updatePropertyDto });
         if (categoryUpdated.affected === 0) throw new HttpException('Property not updated', HttpStatus.BAD_REQUEST);
-        throw new HttpException('Property updated', HttpStatus.OK);
+        return { statusCode: HttpStatus.OK, message: 'Property updated' };
     }
 
     async updateActive(id: number, activePropertyDto: ActivePropertyDto, activeUser: IActiveUser) {
