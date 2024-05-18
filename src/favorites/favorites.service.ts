@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Favorite } from './entities/favorite.entity';
@@ -11,16 +11,14 @@ import { UsersService } from '../users/users.service';
 export class FavoritesService {
     constructor(
         @InjectRepository(Favorite) private favoriteRepository: Repository<Favorite>,
-        private readonly propertysService: PropertiesService,
+        @Inject(forwardRef(() => PropertiesService)) private readonly propertiesService: PropertiesService,
         private readonly usersService: UsersService,
     ) {}
 
     async create(propertyId: number, activeUser: IActiveUser) {
-        console.log(propertyId, activeUser);
         const user = await this.usersService.findOne(activeUser.id);
         if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-        const property = await this.propertysService.validateProperty(propertyId);
-        this.propertysService.validateSameUser(property, activeUser);
+        const property = await this.propertiesService.validateProperty(propertyId);
         const createFavorite = this.favoriteRepository.create({ propertyId: property.id, userId: activeUser.id });
         const createdFavorite = await this.favoriteRepository.save(createFavorite);
         console.log(createdFavorite);
