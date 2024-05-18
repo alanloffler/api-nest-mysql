@@ -12,7 +12,7 @@ import * as fs from 'node:fs/promises';
 export class ImagesService {
     constructor(
         @Inject(forwardRef(() => PropertiesService)) private readonly propertiesService: PropertiesService,
-        @InjectRepository(Image) private imageRepository: Repository<Image>,
+        @InjectRepository(Image) private imageRepository: Repository<Image>
     ) {}
 
     async create(createImageDto: CreateImageDto, activeUser: IActiveUser) {
