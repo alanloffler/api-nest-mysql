@@ -160,11 +160,25 @@ export class PropertiesService {
     async findLatest(amount: number) {
         if (amount < 1) throw new HttpException('Amount must be greater than 0', HttpStatus.BAD_REQUEST);
         if (!Number.isInteger(amount)) throw new HttpException('Amount must be an integer', HttpStatus.BAD_REQUEST);
-
         const latestProperties = await this.propertyRepository.find({
             take: amount,
             order: { created_at: 'DESC' },
             relations: { images: true },
+        });
+        if (latestProperties.length < 1) throw new HttpException('Properties not found', HttpStatus.NOT_FOUND);
+        return latestProperties;
+    }
+
+    async findLatestActiveUser(amount: number, activeUser: IActiveUser) {
+        if (amount < 1) throw new HttpException('Amount must be greater than 0', HttpStatus.BAD_REQUEST);
+        if (!Number.isInteger(amount)) throw new HttpException('Amount must be an integer', HttpStatus.BAD_REQUEST);
+        const latestProperties = await this.propertyRepository.find({
+            take: amount,
+            order: { created_at: 'DESC' },
+            relations: { images: true },
+            where: {
+                created_by: activeUser.id
+            }
         });
         if (latestProperties.length < 1) throw new HttpException('Properties not found', HttpStatus.NOT_FOUND);
         return latestProperties;

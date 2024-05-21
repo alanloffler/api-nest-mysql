@@ -82,6 +82,11 @@ export class PropertiesController {
         return this.propertiesService.findLatest(amount);
     }
     
+    @Get(':amount/latestActiveUser')
+    findLatestUserOnly(@Param('amount', ParseIntPipe) amount: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.propertiesService.findLatestActiveUser(amount, activeUser);
+    }
+
     @Get('dashboard/dashboardStats')
     countByCreator(@ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.dashboardStats(activeUser);
