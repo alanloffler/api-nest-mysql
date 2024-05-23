@@ -22,7 +22,7 @@ export class StatesController {
         return this.statesService.findAll();
     }
 
-    @Get()
+    @Get('admin')
     findAllAdmin() {
         return this.statesService.findAllAdmin();
     }
