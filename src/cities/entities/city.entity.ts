@@ -13,9 +13,6 @@ export class City {
 
     @Column()
     zip: string;
-
-    @Column()
-    createdBy: number;
     
     @CreateDateColumn()
     createdAt: Date;
