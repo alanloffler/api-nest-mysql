@@ -28,7 +28,6 @@ export class SettingsService {
     }
 
     async update(id: number, updateSettingDto: UpdateSettingDto) {
-        console.log(id, updateSettingDto);
         const setting = await this.settingRepository.update(id, { ...updateSettingDto });
         if (setting.affected === 0) throw new HttpException('Setting not updated', HttpStatus.BAD_REQUEST);
         return { statusCode: HttpStatus.OK, message: 'Setting updated' };

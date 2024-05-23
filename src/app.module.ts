@@ -11,6 +11,7 @@ import { RolesModule } from './roles/roles.module';
 import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
 import { CitiesModule } from './cities/cities.module';
+import { StatesModule } from './states/states.module';
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import { CitiesModule } from './cities/cities.module';
         RolesModule,
         RolesModule,
         SettingsModule,
+        StatesModule,
         UsersModule,
     ],
     controllers: [],

@@ -22,6 +22,12 @@ export class CitiesController {
         return this.citiesService.findAll();
     }
 
+    @Roles(Role.ADMIN)
+    @Get('admin')
+    findAllAdmin() {
+        return this.citiesService.findAllAdmin();
+    }
+
     @Roles(Role.USER)
     @Get(':id')
     findOne(@Param('id', ParseIntPipe) id: number) {

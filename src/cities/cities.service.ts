@@ -27,6 +27,17 @@ export class CitiesService {
         return cities;
     }
 
+    async findAllAdmin(): Promise<City[] | HttpException> {
+        const cities = await this.cityRepository.find({
+            order: {
+                city: 'ASC',
+            },
+            withDeleted: true,
+        });
+        if (!cities) throw new HttpException('Cities not found', HttpStatus.NOT_FOUND);
+        return cities;
+    }
+
     async findOne(id: number): Promise<City | HttpException> {
         const city = await this.cityRepository.findOneBy({ id });
         if (!city) throw new HttpException('City not found', HttpStatus.NOT_FOUND);
