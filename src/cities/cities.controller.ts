@@ -3,6 +3,7 @@ import { Auth } from '../auth/decorators/auth.decorator';
 import { CitiesService } from './cities.service';
 import { CreateCityDto } from './dto/create-city.dto';
 import { Role } from '../common/enums/role.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { UpdateCityDto } from './dto/update-city.dto';
 
 @Auth(Role.ADMIN)
@@ -15,11 +16,13 @@ export class CitiesController {
         return this.citiesService.create(createCityDto);
     }
 
+    @Roles(Role.USER)
     @Get()
     findAll() {
         return this.citiesService.findAll();
     }
 
+    @Roles(Role.USER)
     @Get(':id')
     findOne(@Param('id', ParseIntPipe) id: number) {
         return this.citiesService.findOne(id);
