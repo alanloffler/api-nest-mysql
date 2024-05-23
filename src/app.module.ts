@@ -10,6 +10,7 @@ import { PropertiesModule } from './properties/properties.module';
 import { RolesModule } from './roles/roles.module';
 import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
+import { CitiesModule } from './cities/cities.module';
 
 @Module({
     imports: [
@@ -27,13 +28,14 @@ import { UsersModule } from './users/users.module';
         AuthModule,
         BusinessModule,
         CategoriesModule,
+        CitiesModule,
         FavoritesModule,
         ImagesModule,
         PropertiesModule,
         RolesModule,
+        RolesModule,
         SettingsModule,
         UsersModule,
-        RolesModule,
     ],
     controllers: [],
     providers: [],
