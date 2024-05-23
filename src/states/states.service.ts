@@ -23,6 +23,12 @@ export class StatesService {
         return states;
     }
 
+    async findAllAdmin(): Promise<State[] | HttpException> {
+        const states = await this.stateRepository.find({ withDeleted: true });
+        if (!states) throw new HttpException('States not found', HttpStatus.NOT_FOUND);
+        return states;
+    }
+
     async findOne(id: number): Promise<State | HttpException> {
         const state = await this.stateRepository.findOneBy({ id });
         if (!state) throw new HttpException('State not found', HttpStatus.NOT_FOUND);

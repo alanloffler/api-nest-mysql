@@ -9,41 +9,46 @@ import { UpdateStateDto } from './dto/update-state.dto';
 @Auth(Role.ADMIN)
 @Controller('states')
 export class StatesController {
-  constructor(private readonly statesService: StatesService) {}
+    constructor(private readonly statesService: StatesService) {}
 
-  @Post()
-  create(@Body() createStateDto: CreateStateDto) {
-    return this.statesService.create(createStateDto);
-  }
+    @Post()
+    create(@Body() createStateDto: CreateStateDto) {
+        return this.statesService.create(createStateDto);
+    }
 
-  @Roles(Role.USER)
-  @Get()
-  findAll() {
-    return this.statesService.findAll();
-  }
+    @Roles(Role.USER)
+    @Get()
+    findAll() {
+        return this.statesService.findAll();
+    }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.statesService.findOne(id);
-  }
+    @Get()
+    findAllAdmin() {
+        return this.statesService.findAllAdmin();
+    }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateStateDto: UpdateStateDto) {
-    return this.statesService.update(id, updateStateDto);
-  }
+    @Get(':id')
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        return this.statesService.findOne(id);
+    }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.statesService.remove(id);
-  }
-  
-  @Delete(':id/soft')
-  removeSoft(@Param('id', ParseIntPipe) id: number) {
-    return this.statesService.removeSoft(id);
-  }
+    @Patch(':id')
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateStateDto: UpdateStateDto) {
+        return this.statesService.update(id, updateStateDto);
+    }
 
-  @Patch(':id/restore')
-  restore(@Param('id', ParseIntPipe) id: number) {
-      return this.statesService.restore(id);
-  }
+    @Delete(':id')
+    remove(@Param('id', ParseIntPipe) id: number) {
+        return this.statesService.remove(id);
+    }
+
+    @Delete(':id/soft')
+    removeSoft(@Param('id', ParseIntPipe) id: number) {
+        return this.statesService.removeSoft(id);
+    }
+
+    @Patch(':id/restore')
+    restore(@Param('id', ParseIntPipe) id: number) {
+        return this.statesService.restore(id);
+    }
 }
