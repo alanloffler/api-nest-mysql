@@ -11,6 +11,8 @@ export class StatesService {
     constructor(@InjectRepository(State) private stateRepository: Repository<State>) {}
 
     async create(createStateDto: CreateStateDto): Promise<State | HttpException> {
+        const stateExists = await this.stateRepository.findOneBy({ state: createStateDto.state });
+        if (stateExists) throw new HttpException('State already exists', HttpStatus.BAD_REQUEST);
         const createState = this.stateRepository.create(createStateDto);
         const newState = await this.stateRepository.save(createState);
         if (!newState) throw new HttpException('State not created', HttpStatus.BAD_REQUEST);
