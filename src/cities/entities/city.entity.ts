@@ -7,9 +7,6 @@ export class City {
     
     @Column({ unique: true })
     city: string;
-    
-    @Column()
-    state: string;
 
     @Column()
     zip: string;
@@ -21,5 +18,5 @@ export class City {
     updatedAt: Date;
 
     @DeleteDateColumn()
-    deletedAt: Date;
+    deletedAt: Date | null;
 }
