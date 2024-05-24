@@ -10,13 +10,13 @@ import { UpdateCityDto } from './dto/update-city.dto';
 export class CitiesService {
     constructor(@InjectRepository(City) private cityRepository: Repository<City>) {}
 
-    async create(createCityDto: CreateCityDto): Promise<City | HttpException> {
+    async create(createCityDto: CreateCityDto): Promise<IResponse | HttpException> {
         const cityExists = await this.cityRepository.findOneBy({ city: createCityDto.city });
         if (cityExists) throw new HttpException('City already exists', HttpStatus.CONFLICT);
         const city = this.cityRepository.create(createCityDto);
         const newCity = await this.cityRepository.save(city);
         if (!newCity) throw new HttpException('City not created', HttpStatus.BAD_REQUEST);
-        return newCity;
+        return { statusCode: HttpStatus.OK, message: 'City created' };
     }
 
     async findAll(): Promise<City[] | HttpException> {

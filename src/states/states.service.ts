@@ -10,13 +10,13 @@ import { UpdateStateDto } from './dto/update-state.dto';
 export class StatesService {
     constructor(@InjectRepository(State) private stateRepository: Repository<State>) {}
 
-    async create(createStateDto: CreateStateDto): Promise<State | HttpException> {
+    async create(createStateDto: CreateStateDto): Promise<IResponse | HttpException> {
         const stateExists = await this.stateRepository.findOneBy({ state: createStateDto.state });
         if (stateExists) throw new HttpException('State already exists', HttpStatus.BAD_REQUEST);
         const createState = this.stateRepository.create(createStateDto);
         const newState = await this.stateRepository.save(createState);
         if (!newState) throw new HttpException('State not created', HttpStatus.BAD_REQUEST);
-        return newState;
+        return { statusCode: HttpStatus.OK, message: 'State created' };
     }
 
     async findAll(): Promise<State[] | HttpException> {
