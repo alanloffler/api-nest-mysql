@@ -9,6 +9,9 @@ export class City {
     city: string;
 
     @Column()
+    state: string;
+
+    @Column()
     zip: string;
     
     @CreateDateColumn()

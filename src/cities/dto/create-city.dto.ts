@@ -7,6 +7,11 @@ export class CreateCityDto {
     @MinLength(1)
     city: string;
 
+    @Transform(({ value }) => value.trim().toLowerCase())
+    @IsString()
+    @MinLength(1)
+    state: string;
+
     @Transform(({ value }) => value.trim())
     @IsString()
     @MinLength(1)
