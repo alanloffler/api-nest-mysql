@@ -1,4 +1,4 @@
-import { IsNumber, IsPositive, IsString, IsIn, MinLength, Max, IsInt, IsOptional, IsDecimal } from 'class-validator';
+import { IsNumber, IsPositive, IsString, IsIn, MinLength, Max, IsInt, IsOptional } from 'class-validator';
 
 export class CreatePropertyDto {
     @IsString()
@@ -49,11 +49,9 @@ export class CreatePropertyDto {
     @MinLength(1)
     zip: string
 
-    @IsDecimal()
     @IsOptional()
     lat?: number;
 
-    @IsDecimal()
     @IsOptional()
     lng?: number;
 

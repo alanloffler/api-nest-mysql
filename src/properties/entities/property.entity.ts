@@ -47,10 +47,10 @@ export class Property {
     @OneToMany(() => Image, (image) => image.property)
     images: Image[];
 
-    @Column({ default: 0})
+    @Column('decimal', { precision: 20, scale: 15, default: 0})
     lat?: number;
 
-    @Column({ default: 0 })
+    @Column('decimal', { precision: 20, scale: 15, default: 0 })
     lng?: number;
 
     @Column({ default: null })
