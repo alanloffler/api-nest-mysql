@@ -47,6 +47,18 @@ export class Property {
     @OneToMany(() => Image, (image) => image.property)
     images: Image[];
 
+    @Column({ default: 0})
+    lat?: number;
+
+    @Column({ default: 0 })
+    lng?: number;
+
+    @Column({ default: null })
+    key?: string;
+
+    @Column({ default: 0 })
+    zoom?: number;
+
     @CreateDateColumn()
     created_at: Date;
 
