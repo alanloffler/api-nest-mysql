@@ -49,11 +49,11 @@ export class CreatePropertyDto {
     @MinLength(1)
     zip: string
 
-    @IsInt()
+    @IsNumber()
     @IsOptional()
     lat?: number;
 
-    @IsInt()
+    @IsNumber()
     @IsOptional()
     lng?: number;
 
