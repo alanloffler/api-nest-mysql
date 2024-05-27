@@ -54,8 +54,7 @@ export class ImagesService {
         if (!imageFound) throw new HttpException('Image not found', HttpStatus.NOT_FOUND);
 
         try {
-            const imageUnlinked = await fs.unlink(`../room202/src/assets/photos/${imageFound.name}`);
-            console.log(imageUnlinked);
+           await fs.unlink(`../room202/src/assets/photos/${imageFound.name}`);
         } catch (error) {
            throw new HttpException('Image not unlinked', HttpStatus.BAD_REQUEST);
         }
@@ -119,7 +118,6 @@ export class ImagesService {
     // ADMIN ACTION ONLY
     public async restoreMany(id: number) {
         const propertyFound = await this.propertiesService.findOneWithDeleted(id);
-        console.log(propertyFound);
         if (propertyFound.images.length > 0) {
             const imagesFound = propertyFound.images;
             const promises = await Promise.all(imagesFound.map((image) => this.restore(image.id)));

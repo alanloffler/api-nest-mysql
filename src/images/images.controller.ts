@@ -87,7 +87,6 @@ export class ImagesController {
         @Param('id', ParseIntPipe) id: number,
         @ActiveUser() activeUser: IActiveUser,
     ) {
-        console.log(file, id);
         if (!file) throw new HttpException('File not uploaded', HttpStatus.BAD_REQUEST);
         const createImageDto: CreateImageDto = { name: file.filename, propertyId: id, uploaded_by: activeUser.id };
         return await this.imagesService.create(createImageDto, activeUser);

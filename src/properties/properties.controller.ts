@@ -55,7 +55,6 @@ export class PropertiesController {
         @Body() activePropertyDto: ActivePropertyDto,
         @ActiveUser() activeUser: IActiveUser,
     ) {
-        console.log(activePropertyDto);
         return this.propertiesService.updateActive(id, activePropertyDto, activeUser);
     }
 

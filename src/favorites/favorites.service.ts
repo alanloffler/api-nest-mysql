@@ -21,7 +21,6 @@ export class FavoritesService {
         const property = await this.propertiesService.validateProperty(propertyId);
         const createFavorite = this.favoriteRepository.create({ propertyId: property.id, userId: activeUser.id });
         const createdFavorite = await this.favoriteRepository.save(createFavorite);
-        console.log(createdFavorite);
         if (!createdFavorite) throw new HttpException('Favorite not created', HttpStatus.BAD_REQUEST);
         return { message: 'Favorite created', statusCode: HttpStatus.OK };
     }
