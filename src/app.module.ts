@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { BusinessModule } from './business/business.module';
 import { CategoriesModule } from './categories/categories.module';
-import { CategorySubscriber } from './categories/category.subscriber';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ImagesModule } from './images/images.module';
 import { PropertiesModule } from './properties/properties.module';
@@ -24,7 +23,6 @@ import { StatesModule } from './states/states.module';
             database: 'api-nest',
             autoLoadEntities: true,
             synchronize: true,
-            subscribers: [CategorySubscriber],
         }),
         AuthModule,
         BusinessModule,
