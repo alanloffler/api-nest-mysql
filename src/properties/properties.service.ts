@@ -36,13 +36,13 @@ export class PropertiesService {
             return await this.propertyRepository.find({
                 withDeleted: true,
                 order: { created_at: 'DESC' },
-                relations: { user: true },
+                relations: { user: true, images: true },
             });
 
         const properties = await this.propertyRepository.find({
             where: { created_by: activeUser.id },
             order: { created_at: 'DESC' },
-            relations: { user: true },
+            relations: { user: true, images: true },
         });
         if (!properties) throw new HttpException('Properties not found', HttpStatus.NOT_FOUND);
 
@@ -52,7 +52,7 @@ export class PropertiesService {
     async findAllClient() {
         const properties = await this.propertyRepository.find({
             order: { created_at: 'DESC' },
-            relations: { user: true },
+            relations: { user: true, images: true },
         });
         if (!properties) throw new HttpException('Properties not found', HttpStatus.NOT_FOUND);
         return properties;
