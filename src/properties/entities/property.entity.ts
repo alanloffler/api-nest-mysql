@@ -53,7 +53,7 @@ export class Property {
     @Column('decimal', { precision: 20, scale: 15, default: 0 })
     lng?: number;
 
-    @Column({ default: null })
+    @Column({ default: null, nullable: true })
     key?: string;
 
     @Column({ default: 0 })
