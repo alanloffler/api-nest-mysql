@@ -8,9 +8,11 @@ import {
     OneToMany,
     UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { City } from '../../cities/entities/city.entity';
+import { Favorite } from '../../favorites/entities/favorite.entity';
 import { Image } from '../../images/entities/image.entity';
-import { Favorite } from 'src/favorites/entities/favorite.entity';
+import { State } from '../../states/entities/state.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Property {
@@ -72,17 +74,19 @@ export class Property {
     @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
     user: User;
 
+    @ManyToOne(() => State)
+    @JoinColumn({ name: 'state', referencedColumnName: 'id' })
+    state: State;
+
+    @ManyToOne(() => City)
+    @JoinColumn({ name: 'city', referencedColumnName: 'id' })
+    city: City;
+
     @Column()
     created_by: number;
 
     @Column()
     street: string;
-
-    @Column()
-    city: string;
-
-    @Column()
-    state: string;
 
     @Column()
     zip: string;

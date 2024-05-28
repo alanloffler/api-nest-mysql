@@ -24,6 +24,7 @@ export class CitiesService {
             order: {
                 city: 'ASC',
             },
+            relations: { state: true },
         });
         if (!cities) throw new HttpException('Cities not found', HttpStatus.NOT_FOUND);
         return cities;
@@ -35,13 +36,14 @@ export class CitiesService {
                 city: 'ASC',
             },
             withDeleted: true,
+            relations: { state: true },
         });
         if (!cities) throw new HttpException('Cities not found', HttpStatus.NOT_FOUND);
         return cities;
     }
 
     async findOne(id: number): Promise<City | HttpException> {
-        const city = await this.cityRepository.findOneBy({ id });
+        const city = await this.cityRepository.findOne({ where: { id: id }, relations: { state: true } });
         if (!city) throw new HttpException('City not found', HttpStatus.NOT_FOUND);
         return city;
     }

@@ -1,4 +1,6 @@
 import { IsNumber, IsPositive, IsString, IsIn, MinLength, Max, IsInt, IsOptional } from 'class-validator';
+import { State } from '../../states/entities/state.entity';
+import { City } from '../../cities/entities/city.entity';
 
 export class CreatePropertyDto {
     @IsString()
@@ -39,11 +41,11 @@ export class CreatePropertyDto {
     
     @IsString()
     @MinLength(1)
-    city: string;
+    city: City;
     
-    @IsString()
-    @MinLength(1)
-    state: string;
+    @IsInt()
+    @IsPositive()
+    state: State;
     
     @IsString()
     @MinLength(1)

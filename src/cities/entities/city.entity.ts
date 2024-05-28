@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Property } from "../../properties/entities/property.entity";
+import { State } from "../../states/entities/state.entity";
 
 @Entity()
 export class City {
@@ -7,9 +9,6 @@ export class City {
     
     @Column({ unique: true })
     city: string;
-
-    @Column()
-    state: string;
 
     @Column()
     zip: string;
@@ -22,4 +21,11 @@ export class City {
 
     @DeleteDateColumn()
     deletedAt: Date | null;
+
+    @ManyToOne(() => State, (state) => state.id)
+    @JoinColumn({ name: 'state', referencedColumnName: 'id' })
+    state: State;
+
+    @OneToMany(() => Property, (property) => property.state)
+    properties: Property[];
 }
