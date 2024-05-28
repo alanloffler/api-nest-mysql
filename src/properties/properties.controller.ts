@@ -33,6 +33,11 @@ export class PropertiesController {
     findOne(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.findOne(id, activeUser);
     }
+
+    @Get(':id/client')
+    findOneClient(@Param('id', ParseIntPipe) id: number) {
+        return this.propertiesService.findOneClient(id);
+    }
     
     @Get(':id/withDeleted')
     @Roles(Role.ADMIN)

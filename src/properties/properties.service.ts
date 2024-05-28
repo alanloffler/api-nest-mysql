@@ -68,6 +68,15 @@ export class PropertiesService {
         });
     }
 
+    async findOneClient(id: number) {
+        const property = await this.propertyRepository.findOne({
+            where: { id },
+            relations: { images: true, user: true },
+        });
+        if (!property) throw new HttpException('Property not found', HttpStatus.NOT_FOUND);
+        return property;
+    }
+
     async findOneWithDeleted(id: number) {
         const propertyDeleted = await this.propertyRepository.findOne({
             where: { id },
@@ -177,8 +186,8 @@ export class PropertiesService {
             order: { created_at: 'DESC' },
             relations: { images: true },
             where: {
-                created_by: activeUser.id
-            }
+                created_by: activeUser.id,
+            },
         });
         if (latestProperties.length < 1) throw new HttpException('Properties not found', HttpStatus.NOT_FOUND);
         return latestProperties;
