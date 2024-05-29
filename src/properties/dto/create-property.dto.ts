@@ -39,8 +39,8 @@ export class CreatePropertyDto {
     @MinLength(1)
     street: string;
     
-    @IsString()
-    @MinLength(1)
+    @IsInt()
+    @IsPositive()
     city: City;
     
     @IsInt()
