@@ -26,12 +26,15 @@ export class FavoritesService {
     }
 
     async findAll(activeUser: IActiveUser) {
-        if (activeUser.role === Role.ADMIN)
-            return await this.favoriteRepository.find({
+        if (activeUser.role === Role.ADMIN) {
+            const favorites = await this.favoriteRepository.find({
                 where: { userId: activeUser.id },
                 withDeleted: true,
                 order: { id: 'DESC' },
             });
+            if (!favorites) throw new HttpException('Favorites not found', HttpStatus.NOT_FOUND);
+            return favorites;
+        }
         const favorites = await this.favoriteRepository.find({
             where: { userId: activeUser.id },
             order: { id: 'DESC' },
@@ -42,6 +45,7 @@ export class FavoritesService {
 
     async findOne(id: number, activeUser: IActiveUser) {
         const favorite = await this.favoriteRepository.findOneBy({ propertyId: id, userId: activeUser.id });
+        if (!favorite) return;
         return favorite;
     }
 
