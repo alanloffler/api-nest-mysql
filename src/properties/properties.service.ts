@@ -216,19 +216,18 @@ export class PropertiesService {
     }
 
     async dashboardStats(activeUser: IActiveUser) {
-        // try and catch
         const sql = `
             SELECT
                 p.type AS category,
                 p.color AS color,
                 c.plural AS plural,
                 COUNT(*) AS total,
-                COALESCE(owner_count, 0) AS owner
+                COALESCE(subquery.owner_count, 0) AS owner
             FROM
                 property p
             LEFT JOIN (
                 SELECT
-                    type AS type,
+                    type,
                     COUNT(*) AS owner_count
                 FROM
                     property
@@ -239,8 +238,32 @@ export class PropertiesService {
             ) subquery ON p.type = subquery.type
             LEFT JOIN category c ON p.type = c.name
             GROUP BY
-                p.type, p.color, c.plural;
+                p.type, p.color, c.plural, subquery.owner_count;
         `;
+        // const sql = `
+        //     SELECT
+        //         p.type AS category,
+        //         p.color AS color,
+        //         c.plural AS plural,
+        //         COUNT(*) AS total,
+        //         COALESCE(owner_count, 0) AS owner
+        //     FROM
+        //         property p
+        //     LEFT JOIN (
+        //         SELECT
+        //             type AS type,
+        //             COUNT(*) AS owner_count
+        //         FROM
+        //             property
+        //         WHERE
+        //             created_by = ${activeUser.id}
+        //         GROUP BY
+        //             type
+        //     ) subquery ON p.type = subquery.type
+        //     LEFT JOIN category c ON p.type = c.name
+        //     GROUP BY
+        //         p.type, p.color, c.plural;
+        // `;
         const data = await this.propertyRepository.query(sql);
         const total = data.reduce((a: number, b: any) => a + Number(b.total), 0);
         data.forEach((d: any) => {
