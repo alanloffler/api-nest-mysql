@@ -37,7 +37,7 @@ export class Property {
     @Column()
     short_description: string;
 
-    @Column({ type: 'longtext' })
+    @Column()
     long_description: string;
 
     @Column()
