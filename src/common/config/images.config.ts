@@ -1,6 +1,7 @@
 export const ImagesConfig = {
     // Options
-    destination: '../room202/src/assets/photos',
+    // destination: '../room202/src/assets/photos',
+    destination: process.env.APP_URL + '/assets/photos',
     fileNotUploaded: 'No se pudo cargar el archivo',
     fileType: '.(png|jpeg|jpg)',
     // Messages
