@@ -19,7 +19,7 @@ import { UsersModule } from './users/users.module';
             isGlobal: true,
         }),
         TypeOrmModule.forRoot({
-            type: 'mysql',
+            type: 'postgres',
             host: process.env.MYSQL_HOST,
             port: parseInt(process.env.MYSQL_PORT),
             username: process.env.MYSQL_USERNAME,
