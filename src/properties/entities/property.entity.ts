@@ -28,7 +28,7 @@ export class Property {
     @Column()
     business_type: string;
 
-    @Column({ type: 'tinyint' })
+    @Column()
     is_active: number;
 
     @Column()
