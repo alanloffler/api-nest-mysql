@@ -14,7 +14,14 @@ import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Property]), UsersModule, CategoriesModule, StatesModule, forwardRef(() => ImagesModule), forwardRef(() => FavoritesModule)],
+    imports: [
+        TypeOrmModule.forFeature([Property]),
+        UsersModule,
+        CategoriesModule,
+        StatesModule,
+        forwardRef(() => ImagesModule),
+        forwardRef(() => FavoritesModule),
+    ],
     controllers: [PropertiesController],
     providers: [PropertiesService, UsersService, CategoriesService, ImagesService, StatesService],
     exports: [TypeOrmModule, PropertiesService],

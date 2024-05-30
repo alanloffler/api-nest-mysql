@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { AuthConfig } from '../../common/config/auth.config';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Role } from '../../common/enums/role.enum';
 
@@ -17,7 +18,7 @@ export class RolesGuard implements CanActivate {
         if (role === user.role) {
             return true;
         } else {
-            throw new HttpException('Admin credentials not found', HttpStatus.FORBIDDEN);
+            throw new HttpException(AuthConfig.credentialsNotFound, HttpStatus.FORBIDDEN);
         }
     }
 }

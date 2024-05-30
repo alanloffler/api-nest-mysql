@@ -1,5 +1,5 @@
-import { Transform } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateImageDto {
     @Transform(({ value }) => value.trim())

@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
-import { PropertiesService } from './properties.service';
-import { CreatePropertyDto } from './dto/create-property.dto';
-import { UpdatePropertyDto } from './dto/update-property.dto';
-import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { ActivePropertyDto } from './dto/active-property.dto';
 import { ActiveUser } from '../common/decorators/active-user.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
+import { CreatePropertyDto } from './dto/create-property.dto';
+import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { PropertiesService } from './properties.service';
 import { Role } from '../common/enums/role.enum';
-import { ActivePropertyDto } from './dto/active-property.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { UpdatePropertyDto } from './dto/update-property.dto';
 
 @Auth(Role.USER)
 @Controller('properties')
@@ -23,7 +23,7 @@ export class PropertiesController {
     findAllClient() {
         return this.propertiesService.findAllClient();
     }
-    
+
     @Get()
     findAll(@ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.findAll(activeUser);
@@ -38,7 +38,7 @@ export class PropertiesController {
     findOneClient(@Param('id', ParseIntPipe) id: number) {
         return this.propertiesService.findOneClient(id);
     }
-    
+
     @Get(':id/withDeleted')
     @Roles(Role.ADMIN)
     findOneWithDeleted(@Param('id', ParseIntPipe) id: number) {
@@ -46,20 +46,12 @@ export class PropertiesController {
     }
 
     @Patch(':id')
-    update(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() updatePropertyDto: UpdatePropertyDto,
-        @ActiveUser() activeUser: IActiveUser,
-    ) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() updatePropertyDto: UpdatePropertyDto, @ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.update(id, updatePropertyDto, activeUser);
     }
 
     @Patch(':id/active')
-    updateActive(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() activePropertyDto: ActivePropertyDto,
-        @ActiveUser() activeUser: IActiveUser,
-    ) {
+    updateActive(@Param('id', ParseIntPipe) id: number, @Body() activePropertyDto: ActivePropertyDto, @ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.updateActive(id, activePropertyDto, activeUser);
     }
 
@@ -85,7 +77,7 @@ export class PropertiesController {
     findLatest(@Param('amount', ParseIntPipe) amount: number) {
         return this.propertiesService.findLatest(amount);
     }
-    
+
     @Get(':amount/latestActiveUser')
     findLatestUserOnly(@Param('amount', ParseIntPipe) amount: number, @ActiveUser() activeUser: IActiveUser) {
         return this.propertiesService.findLatestActiveUser(amount, activeUser);

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { ActiveUser } from '../common/decorators/active-user.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { BusinessService } from './business.service';
@@ -30,32 +30,32 @@ export class BusinessController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: number) {
+    findOne(@Param('id', ParseIntPipe) id: number) {
         return this.businessService.findOne(id);
     }
 
     @Get(':id/withDeleted')
-    findOneWithDeleted(@Param('id') id: number) {
+    findOneWithDeleted(@Param('id', ParseIntPipe) id: number) {
         return this.businessService.findOneWithDeleted(id);
     }
 
     @Patch(':id')
-    update(@Param('id') id: number, @Body() updateBusinessDto: UpdateBusinessDto, @ActiveUser() activeUser: IActiveUser) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateBusinessDto: UpdateBusinessDto, @ActiveUser() activeUser: IActiveUser) {
         return this.businessService.update(id, updateBusinessDto, activeUser);
     }
 
     @Patch(':id/restore')
-    restore(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    restore(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.businessService.restore(id, activeUser);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: number) {
+    remove(@Param('id', ParseIntPipe) id: number) {
         return this.businessService.remove(id);
     }
 
     @Delete(':id/soft')
-    removeSoft(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    removeSoft(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.businessService.removeSoft(id, activeUser);
     }
 }

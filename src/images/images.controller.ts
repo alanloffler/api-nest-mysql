@@ -18,6 +18,7 @@ import { ActiveUser } from '../common/decorators/active-user.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { CreateImageDto } from './dto/create-image.dto';
 import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { ImagesConfig } from '../common/config/images.config';
 import { ImagesService } from './images.service';
 import { Role } from '../common/enums/role.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -33,14 +34,14 @@ export class ImagesController {
     }
 
     @Get(':id/allByProperty')
-    findAllByProperty(@Param('id', ParseIntPipe) id: number) {
-        return this.imagesService.findAllByProperty(id);
+    findAllByProperty(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.imagesService.findAllByProperty(id, activeUser);
     }
 
     @Get(':id/allByPropertyWithDeleted')
     @Roles(Role.ADMIN)
-    findAllByPropertyWithDeleted(@Param('id', ParseIntPipe) id: number) {
-        return this.imagesService.findAllByPropertyWithDeleted(id);
+    findAllByPropertyWithDeleted(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
+        return this.imagesService.findAllByPropertyWithDeleted(id, activeUser);
     }
 
     @Get(':id')
@@ -80,15 +81,16 @@ export class ImagesController {
     public async uploadImage(
         @UploadedFile(
             new ParseFilePipeBuilder()
-                .addFileTypeValidator({ fileType: '.(png|jpeg|jpg)' })
+                .addFileTypeValidator({ fileType: ImagesConfig.fileType })
                 .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
         )
         file: Express.Multer.File,
         @Param('id', ParseIntPipe) id: number,
         @ActiveUser() activeUser: IActiveUser,
     ) {
-        if (!file) throw new HttpException('File not uploaded', HttpStatus.BAD_REQUEST);
+        if (!file) throw new HttpException(ImagesConfig.fileNotUploaded, HttpStatus.BAD_REQUEST);
         const createImageDto: CreateImageDto = { name: file.filename, propertyId: id, uploaded_by: activeUser.id };
+        
         return await this.imagesService.create(createImageDto, activeUser);
     }
 }

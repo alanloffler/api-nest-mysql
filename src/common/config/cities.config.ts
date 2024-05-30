@@ -1,0 +1,15 @@
+export const CitiesConfig = {
+    alreadyExists: 'La ciudad ya existe',
+    created: 'Ciudad creada',
+    deleted: 'Ciudad eliminada',
+    notCreated: 'Ciudad no creada',
+    notDeleted: 'Ciudad no eliminada',
+    notDeletedRestored: 'Ciudad no eliminada (falló la restauración)',
+    notFound: 'Ciudad no encontrada',
+    notFoundMany: 'Ciudades no encontradas', 
+    notRestored: 'Ciudad no restaurada',
+    notSoftDeleted: 'La ciudad no está eliminada parcialmente',
+    notUpdated: 'Ciudad no actualizada',
+    restored: 'Ciudad restaurada',
+    updated: 'Ciudad actualizada',
+};

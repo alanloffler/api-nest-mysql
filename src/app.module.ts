@@ -3,14 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { BusinessModule } from './business/business.module';
 import { CategoriesModule } from './categories/categories.module';
+import { CitiesModule } from './cities/cities.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ImagesModule } from './images/images.module';
 import { PropertiesModule } from './properties/properties.module';
 import { RolesModule } from './roles/roles.module';
 import { SettingsModule } from './settings/settings.module';
-import { UsersModule } from './users/users.module';
-import { CitiesModule } from './cities/cities.module';
 import { StatesModule } from './states/states.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
     imports: [

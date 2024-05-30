@@ -1,5 +1,5 @@
-import { Transform } from "class-transformer";
 import { IsString, MinLength } from "class-validator";
+import { Transform } from "class-transformer";
 
 export class CreateStateDto {
     @Transform(({ value }) => value.trim().toLowerCase())

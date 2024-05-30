@@ -1,8 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, UpdateDateColumn } from 'typeorm';
-
-import { Role } from '../../common/enums/role.enum';
-import { Property } from '../../properties/entities/property.entity';
 import { Image } from '../../images/entities/image.entity';
+import { Property } from '../../properties/entities/property.entity';
+import { Role } from '../../common/enums/role.enum';
 
 @Entity()
 export class User {

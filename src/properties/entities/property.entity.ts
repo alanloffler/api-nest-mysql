@@ -45,7 +45,7 @@ export class Property {
     
     @OneToMany(() => Favorite, favorite => favorite.propertyId)
     favorites: Favorite[];
-    // @OneToMany(() => Image, (image) => image.property, { cascade: true, onDelete: 'CASCADE' })
+
     @OneToMany(() => Image, (image) => image.property)
     images: Image[];
 

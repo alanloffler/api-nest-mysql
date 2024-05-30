@@ -1,6 +1,6 @@
 import { IsInt, IsPositive, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { State } from 'src/states/entities/state.entity';
+import { State } from '../../states/entities/state.entity';
 
 export class CreateCityDto {
     @Transform(({ value }) => value.trim().toLowerCase())

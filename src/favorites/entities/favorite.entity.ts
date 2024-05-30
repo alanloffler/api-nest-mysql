@@ -1,5 +1,5 @@
-import { Property } from "src/properties/entities/property.entity";
 import { Column, Entity, ManyToOne } from "typeorm";
+import { Property } from "../../properties/entities/property.entity";
 
 @Entity()
 export class Favorite {
@@ -11,6 +11,7 @@ export class Favorite {
 
     @ManyToOne(() => Property, property => property.favorites, { onDelete: 'CASCADE', orphanedRowAction: 'delete' })
     property: Property;
+    
     @Column({ nullable: true })
     propertyId: number;
 }

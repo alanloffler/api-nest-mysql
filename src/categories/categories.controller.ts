@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { ActiveUser } from '../common/decorators/active-user.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { CategoriesService } from './categories.service';
@@ -30,32 +30,32 @@ export class CategoriesController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: number) {
+    findOne(@Param('id', ParseIntPipe) id: number) {
         return this.categoriesService.findOne(id);
     }
 
     @Get(':id/withDeleted')
-    findOneWithDeleted(@Param('id') id: number) {
+    findOneWithDeleted(@Param('id', ParseIntPipe) id: number) {
         return this.categoriesService.findOneWithDeleted(id);
     }
 
     @Patch(':id')
-    update(@Param('id') id: number, @Body() updateCategoryDto: UpdateCategoryDto, @ActiveUser() activeUser: IActiveUser) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateCategoryDto: UpdateCategoryDto, @ActiveUser() activeUser: IActiveUser) {
         return this.categoriesService.update(id, updateCategoryDto, activeUser);
     }
 
     @Patch(':id/restore')
-    restore(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    restore(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.categoriesService.restore(id, activeUser);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: number) {
+    remove(@Param('id', ParseIntPipe) id: number) {
         return this.categoriesService.remove(id);
     }
 
     @Delete(':id/soft')
-    removeSoft(@Param('id') id: number, @ActiveUser() activeUser: IActiveUser) {
+    removeSoft(@Param('id', ParseIntPipe) id: number, @ActiveUser() activeUser: IActiveUser) {
         return this.categoriesService.removeSoft(id, activeUser);
     }
 }

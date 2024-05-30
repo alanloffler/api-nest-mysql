@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { City } from '../../cities/entities/city.entity';
 import { Property } from '../../properties/entities/property.entity';
-import { City } from 'src/cities/entities/city.entity';
 
 @Entity()
 export class State {

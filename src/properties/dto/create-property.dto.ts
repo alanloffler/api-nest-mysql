@@ -1,6 +1,6 @@
 import { IsNumber, IsPositive, IsString, IsIn, MinLength, Max, IsInt, IsOptional } from 'class-validator';
-import { State } from '../../states/entities/state.entity';
 import { City } from '../../cities/entities/city.entity';
+import { State } from '../../states/entities/state.entity';
 
 export class CreatePropertyDto {
     @IsString()

@@ -5,6 +5,7 @@ import { diskStorage } from 'multer';
 import { CategoriesModule } from '../categories/categories.module';
 import { CategoriesService } from '../categories/categories.service';
 import { Image } from './entities/image.entity';
+import { ImagesConfig } from '../common/config/images.config';
 import { ImagesController } from './images.controller';
 import { ImagesService } from './images.service';
 import { PropertiesModule } from '../properties/properties.module';
@@ -18,7 +19,7 @@ import { UsersService } from '../users/users.service';
         MulterModule.registerAsync({
             useFactory: () => ({
                 storage: diskStorage({
-                    destination: '../room202/src/assets/photos',
+                    destination: ImagesConfig.destination,
                     filename: (req: Express.Request, file: Express.Multer.File, callback: any) => {
                         callback(null, crypto.randomUUID() + '.' + file.originalname.split('.').pop());
                     },
@@ -31,6 +32,6 @@ import { UsersService } from '../users/users.service';
     ],
     controllers: [ImagesController],
     providers: [ImagesService, UsersService, CategoriesService, PropertiesService],
-    exports: [TypeOrmModule, ImagesService]
+    exports: [TypeOrmModule, ImagesService],
 })
 export class ImagesModule {}

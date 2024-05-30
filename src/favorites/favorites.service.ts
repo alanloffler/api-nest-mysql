@@ -2,7 +2,9 @@ import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nest
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Favorite } from './entities/favorite.entity';
+import { FavoritesConfig } from '../common/config/favorites.config';
 import { IActiveUser } from '../common/interfaces/active-user.interface';
+import { IResponse } from '../common/interfaces/response.interface';
 import { PropertiesService } from '../properties/properties.service';
 import { Role } from '../common/enums/role.enum';
 import { UsersService } from '../users/users.service';
@@ -15,43 +17,49 @@ export class FavoritesService {
         private readonly usersService: UsersService,
     ) {}
 
-    async create(propertyId: number, activeUser: IActiveUser) {
+    async create(propertyId: number, activeUser: IActiveUser): Promise<IResponse> {
         const user = await this.usersService.findOne(activeUser.id);
-        if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        if (!user) throw new HttpException(FavoritesConfig.userNotFound, HttpStatus.NOT_FOUND);
+
         const property = await this.propertiesService.validateProperty(propertyId);
         const createFavorite = this.favoriteRepository.create({ propertyId: property.id, userId: activeUser.id });
         const createdFavorite = await this.favoriteRepository.save(createFavorite);
-        if (!createdFavorite) throw new HttpException('Favorite not created', HttpStatus.BAD_REQUEST);
-        return { message: 'Favorite created', statusCode: HttpStatus.OK };
+        if (!createdFavorite) throw new HttpException(FavoritesConfig.notCreated, HttpStatus.BAD_REQUEST);
+
+        return { statusCode: HttpStatus.OK, message: FavoritesConfig.created };
     }
 
-    async findAll(activeUser: IActiveUser) {
+    async findAll(activeUser: IActiveUser): Promise<Favorite[]> {
         if (activeUser.role === Role.ADMIN) {
             const favorites = await this.favoriteRepository.find({
                 where: { userId: activeUser.id },
                 withDeleted: true,
                 order: { id: 'DESC' },
             });
-            if (!favorites) throw new HttpException('Favorites not found', HttpStatus.NOT_FOUND);
+            if (!favorites) throw new HttpException(FavoritesConfig.notFoundMany, HttpStatus.NOT_FOUND);
+
             return favorites;
         }
         const favorites = await this.favoriteRepository.find({
             where: { userId: activeUser.id },
             order: { id: 'DESC' },
         });
-        if (!favorites) throw new HttpException('Favorites not found', HttpStatus.NOT_FOUND);
+        if (!favorites) throw new HttpException(FavoritesConfig.notFound, HttpStatus.NOT_FOUND);
+
         return favorites;
     }
 
-    async findOne(id: number, activeUser: IActiveUser) {
+    async findOne(id: number, activeUser: IActiveUser): Promise<Favorite> {
         const favorite = await this.favoriteRepository.findOneBy({ propertyId: id, userId: activeUser.id });
         if (!favorite) return;
+
         return favorite;
     }
 
-    async remove(id: number) {
+    async remove(id: number): Promise<IResponse> {
         const deleteFavorite = await this.favoriteRepository.delete({ propertyId: id });
-        if (deleteFavorite.affected === 0) throw new HttpException('Favorite not deleted', HttpStatus.BAD_REQUEST);
-        return { message: 'Favorite deleted', statusCode: HttpStatus.OK };
+        if (deleteFavorite.affected === 0) throw new HttpException(FavoritesConfig.notDeleted, HttpStatus.BAD_REQUEST);
+
+        return { statusCode: HttpStatus.OK, message: FavoritesConfig.deleted };
     }
 }
