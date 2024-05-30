@@ -25,7 +25,7 @@ export class UsersService {
 
     async findOneByEmail(email: string): Promise<User> {
         const userFound = await this.userRepository.findOneBy({ email });
-        if (!userFound) throw new HttpException(UsersConfig.userExists, HttpStatus.CONFLICT);
+        if (userFound) throw new HttpException(UsersConfig.userExists, HttpStatus.CONFLICT);
 
         return userFound;
     }
