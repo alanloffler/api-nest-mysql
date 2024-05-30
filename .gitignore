@@ -8,6 +8,8 @@
 docker-compose.yml
 pnpm-lock.yaml
 uploads
+.env
+.env.example
 
 # Logs
 logs
