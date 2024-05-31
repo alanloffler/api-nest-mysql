@@ -4,6 +4,7 @@
 /build
 /mysql
 /test
+/photos
 .prettierrc
 docker-compose.yml
 pnpm-lock.yaml
