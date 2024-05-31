@@ -53,6 +53,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      serve-static:
+        specifier: ^1.15.0
+        version: 1.15.0
       typeorm:
         specifier: ^0.3.20
         version: 0.3.20(mysql2@3.9.2)(pg@8.11.5)(ts-node@10.9.2(@types/node@20.11.30)(typescript@5.4.3))
